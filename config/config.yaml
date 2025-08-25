@@ -1,0 +1,136 @@
+# =================================================================
+# Конфигурация Путей
+# =================================================================
+paths:
+  # Путь к обученной модели, которую будет использовать приложение.
+  model: 'models/catboost_selected_side.joblib'
+  
+  # Опционально: можно указать путь для сохранения результатов.
+  # output_data: 'data/results/'
+
+# =================================================================
+# Конфигурация Признаков
+# =================================================================
+features:
+  # Название целевой переменной. Не используется в инференсе, но полезно для документации.
+  target_col: 'combined'
+  
+  # Это ТОЧНЫЙ список признаков, которые ожидает твоя модель catboost_selected.
+  # Он основан на результатах Sequential Feature Selector (SFS) из твоего ноутбука.
+  # Порядок не важен, но названия должны в точности совпадать с названиями
+  # столбцов в данных ПОСЛЕ переименования.
+  features_to_use:
+    - 'BMI'
+    - 'Comorbidity Index'
+    - 'Coronary Artery Lesion'
+    - 'Dose of Statins'
+    - 'Gender'
+    - 'Lateral LV Wall'
+    - 'Left Main Coronary Artery Lesion'
+    - 'PCI or CABG'
+    - 'VGFR2'
+    
+  # Сохраним здесь полные списки всех признаков для справки и возможного переобучения.
+  # Эти списки взяты из раздела "Download and preprocess data" твоего ноутбука[cite: 398, 400, 401].
+  all_numerical:
+    - 'Age'
+    - 'BMI'
+    - 'Creatinine'
+    - 'Glucose'
+    - 'Heart Rate'
+    - 'Hemoglobin'
+    - 'LV EDV'
+    - 'LV EF'
+    - 'LV ESV'
+    - 'LV Infarct Size'
+    - 'LV Mass'
+    - 'Left Atrium'
+    - 'Systolic BP'
+    - 'Total Cholesterol'
+    - 'Troponin'
+    - 'eGFR EPI'
+    
+  all_binary:
+    - 'Anterior LV Wall'
+    - 'Atrial Fibrillation'
+    - 'BMS or DES'
+    - 'Diabetes'
+    - 'Dose of Statins'
+    - 'Gender'
+    - 'History'
+    - 'Hypertension'
+    - 'Lateral LV Wall'
+    - 'PCI or CABG'
+    - 'Post-MI'
+    - 'Post-Stent'
+    - 'Post-Stroke'
+    - 'ST Segment'
+    
+  all_categorical:
+    - 'Atherosclerosis'
+    - 'Comorbidity Index'
+    - 'Coronary Artery Lesion'
+    - 'Duration of Pain'
+    - 'Infarct-Related Artery'
+    - 'Killip Class'
+    - 'Left Main Coronary Artery Lesion'
+    - 'TIMI Grade in Infarct-Related Artery'
+    - 'VGFR2'
+
+# =================================================================
+# Конфигурация Предобработки
+# =================================================================
+preprocessing:
+  # Словарь для переименования столбцов из исходного файла .xlsx [cite: 353-396].
+  # Ключ: старое название, Значение: новое название.
+  column_mapping:
+    'Пол': 'Gender'
+    'Возраст': 'Age'
+    'ИМТ': 'BMI'
+    'систол. АД': 'Systolic BP'
+    'ЧСС': 'Heart Rate'
+    'Давность болевого синдрома': 'Duration of Pain'
+    'Сегмент ST': 'ST Segment'
+    'Передняя стенка ЛЖ': 'Anterior LV Wall'
+    'Боковая стенка ЛЖ': 'Lateral LV Wall'
+    'Класс Killip': 'Killip Class'
+    'пост-ИМ': 'Post-MI'
+    'пост-ОНМК': 'Post-Stroke'
+    'пост-стент/АКШ': 'Post-Stent'
+    'ФП': 'Atrial Fibrillation'
+    'ГБ': 'Hypertension'
+    'СД': 'Diabetes'
+    'МФА': 'Atherosclerosis'
+    'Индекс коморбидности по Charlson': 'Comorbidity Index'
+    'Отягощенный анамнез': 'History'
+    'ТпТ-ПО, нг/л': 'Troponin'
+    'Хсобщ, ммоль/л': 'Total Cholesterol'
+    'Гемоглобин, г/л': 'Hemoglobin'
+    'Глюкоза, ммоль/л': 'Glucose'
+    'СКФ EPI': 'eGFR EPI'
+    'Креатинин, мкмоль/л': 'Creatinine'
+    'ИКДО ЛЖ': 'LV EDV'
+    'иКСО ЛЖ': 'LV ESV'
+    'ФВ ЛЖ': 'LV EF'
+    'ИММ ЛЖ': 'LV Mass'
+    'ЛП': 'Left Atrium'
+    'ИНЛС ЛЖ': 'LV Infarct Size'
+    'TIMI в ИЗА': 'TIMI Grade in Infarct-Related Artery'
+    'Инфаркт-зависимая артерия': 'Infarct-Related Artery'
+    'Поражение СТВОЛА ЛКА': 'Left Main Coronary Artery Lesion'
+    'Поражение коронарных артерий': 'Coronary Artery Lesion'
+    'ЧКВ-1/АКШ-2': 'PCI or CABG'
+    'Низкая - 1 Высокая - 2': 'Statins'
+    'VGFR2': 'VGFR2'
+    'combined_new_point': 'combined'
+    'Покрытие стентов BMS-1 / DES-2': 'BMS or DES'
+
+# =================================================================
+# Конфигурация Streamlit Приложения
+# =================================================================
+app:
+  # Заголовок, который будет отображаться в приложении.
+  title: 'Прогнозирование риска неблагоприятных исходов'
+  
+  # Название столбца, который будет добавлен к исходной таблице с результатами.
+  output_score_column: 'score'
